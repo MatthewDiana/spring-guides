@@ -1,2 +1,2 @@
 # spring-guides
-## learning material from spring.io
+learning material from spring.io
