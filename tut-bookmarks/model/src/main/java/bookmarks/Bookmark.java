@@ -14,6 +14,10 @@ public class Bookmark {
     @ManyToOne
     private Account account;
 
+    @Id
+    @GeneratedValue
+    private Long id;
+
     Bookmark() { // jpa only
     }
 
