@@ -34,3 +34,34 @@ public class Application {
         MessageListenerAdapter listenerAdapter(Receiver receiver) {
             return new MessageListenerAdapter(receiver, "receiveMessage");
         }
+
+        @Bean
+        Receiver receiver(CountDownLatch latch) {
+            return new Receiver(latch);
+        }
+
+        @Bean
+        CountDownLatch latch() {
+            return new CountDownLatch(1);
+        }
+
+        @Bean
+        StringRedisTemplate template(RedisConnectionFactory connectionFactory) {
+            return new StringRedisTemplate(connectionFactory);
+        }
+
+        public static void main(String[] args) throws InterruptedException {
+
+            ApplicationContext ctx = SpringApplication.run(Application.class, args);
+
+            StringRedisTemplate template = ctx.getBean(StringRedisTemplate.class);
+            CountDownLatch latch = ctx.getBean(CountDownLatch.class);
+
+            LOGGER.info("Sending message...");
+            template.convertAndSend("chat", "Hello from Redis!");
+
+            latch.await();
+
+            System.exit(0);
+        }
+}
